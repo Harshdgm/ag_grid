@@ -1,0 +1,52 @@
+.diabetes-container {
+  margin: 30px auto;
+  padding: 20px;
+  background: #fff;
+  width: 95%;
+  max-width: 1200px;
+}
+
+.diabetes-container h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.table-wrapper {
+  border: 1px solid #ddd;
+  width: 100%;
+  overflow: hidden;
+}
+
+.table-header,
+.table-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); 
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+.table-header {
+  background: #f0f0f0;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.table-cell {
+  padding: 12px;
+  text-align: center;
+  border-right: 1px solid #ddd;
+}
+
+.table-row:hover {
+  background: #f0f0f0;
+}
+
+.table-body {
+  height: 400px; 
+  overflow-y: auto;
+}
+
+

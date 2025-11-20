@@ -1,0 +1,45 @@
+.header {
+  background-color: #ccc;
+  padding: 20px 0;
+  width: 100%;
+  position: sticky;     
+  top: 0;                
+  z-index: 1000;         
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.link {
+  color: #222;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  transition: 0.3s ease;
+  padding-bottom: 3px;
+  border-bottom: 2px solid transparent;
+}
+
+
+.link:hover {
+  color: #000;
+  border-bottom: 2px solid #000;
+}
+
+.link.active {
+  color: #000;
+  border-bottom: 2px solid #000;
+}
+
+@media (max-width: 600px) {
+  .nav {
+    gap: 15px;
+  }
+
+  .link {
+    font-size: 16px;
+  }
+}

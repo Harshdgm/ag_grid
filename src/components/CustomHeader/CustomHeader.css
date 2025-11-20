@@ -1,0 +1,46 @@
+.custom-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding-right: 6px;
+  width: 100%;
+  user-select: none;
+}
+
+.column-title {
+  font-weight: 600;
+}
+
+.three-dot {
+  cursor: pointer;
+  z-index:999;
+}
+
+.menu-data {
+ position: absolute;         
+ background: white;
+ border: 1px solid #ccc;
+ padding: 6px 0;
+ border-radius: 6px;
+ width: 150px;
+ box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+ z-index: 9999;
+}
+
+
+.sort-data {
+ padding: 8px 12px;
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ cursor: pointer;
+}
+
+.sort-data:hover {
+ background: #f0f0f0;
+}
+
+
+
+    
