@@ -10,7 +10,7 @@ export default function index() {
       <div style={{marginBottom:"30px"}}><AgGridPaginationImage /></div>
       <div style={{marginBottom:"30px"}}><AgGridPagination /></div>
       <div style={{marginBottom:"30px"}}><TableFilter /></div>
-      {/* <div style={{marginBottom:"30px"}}><CustomFilterTable /></div> */}
+      <div style={{marginBottom:"30px"}}><CustomFilterTable /></div>
     </>
   )
 }

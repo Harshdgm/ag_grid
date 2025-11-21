@@ -1,15 +1,15 @@
 import React, { useCallback, useRef, useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AgGridReact } from "ag-grid-react";
-import { ModuleRegistry, ClientSideRowModelModule } from "ag-grid-community";
+import { ModuleRegistry, ClientSideRowModelModule, SelectEditorModule, } from "ag-grid-community";
 import { calculateTotals } from "../../utils/addFooterRow";
 import { filterRows } from "../../utils/filterData"; 
 import AgeFilter from "./AgeFilter";
 import { fetchOlympicData } from "../../api/api";
-import asDate from "./rowDate";
+// import asDate from "./rowDate";
 import "./ExternalFilter.css";
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, SelectEditorModule]);
 
 export default function ExternalFilter() {
   const gridRef = useRef(null);
@@ -44,8 +44,8 @@ export default function ExternalFilter() {
   const columnDefs = [
     { field: "athlete", minWidth: 180 },
     { field: "age", filter: "agNumberColumnFilter", minWidth: 20 },
-    { field: "country" },
-    { field: "year", minWidth: 60 },
+    { field: "country"},
+    { field: "year", minWidth: 60 ,  resizable: false},
     {
       field: "date",
       // filter: "agDateColumnFilter",
@@ -57,7 +57,7 @@ export default function ExternalFilter() {
       //},
       maxWidth: 100,
     },
-    { field: "gold", filter: "agNumberColumnFilter" },
+    { field: "gold", filter: "agNumberColumnFilter", resizable: false },
     { field: "silver", filter: "agNumberColumnFilter" },
     { field: "bronze", filter: "agNumberColumnFilter" },
   ];
@@ -91,7 +91,9 @@ export default function ExternalFilter() {
           ref={gridRef}
           rowData={filteredRowData}
           columnDefs={columnDefs}
-          
+          defaultColDef={{
+            resizable: true,
+          }}
         />
       </div>
     </div>
