@@ -6,10 +6,18 @@
 
 .test-header {
     font-size: 13px;
-    margin: 10px 0px;
+    margin-bottom:10px;
     display: flex;
     justify-content: space-around;
     border: 1px solid grey;
     padding: 10px;
     border-radius: 5px;
 }
+
+.search-bar{
+    padding: 10px;
+    width: 300px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef, useState,useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AgGridReact } from "ag-grid-react";
 import { ModuleRegistry, ClientSideRowModelModule } from "ag-grid-community";
@@ -14,6 +14,7 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
 export default function ExternalFilter() {
   const gridRef = useRef(null);
   const [ageType, setAgeType] = useState("everyone");
+  const [searchText, setSearchText] = useState("");
 
   const { data: rowData, isLoading, isError } = useQuery({
     queryKey: ["olympicData"],
@@ -24,6 +25,27 @@ export default function ExternalFilter() {
     setAgeType(newValue);
     gridRef.current?.api.onFilterChanged();
   }, []);
+
+  const handleSearchChange = useCallback((e) => {
+    setSearchText(e.target.value);
+  }, []);
+
+  const filteredRowData = useMemo(() => {
+    if (!rowData) return [];
+
+    return rowData.filter((row) => {
+      const matchesSearch = searchText
+        ? Object.values(row)
+            .join(" ")
+            .toLowerCase()
+            .includes(searchText.toLowerCase())
+        : true;
+
+      const matchesAgeFilter = doesExternalFilterPass(ageType, { data: row });
+
+      return matchesSearch && matchesAgeFilter;
+    });
+  }, [rowData, searchText, ageType]);
 
   const columnDefs = [
     { field: "athlete", minWidth: 180 },
@@ -52,11 +74,19 @@ export default function ExternalFilter() {
   return (
     <div className="test-container">
       <h1>AG Grid with external filter</h1>
+      <input
+        type="text"
+        placeholder="Search Data..."
+        value={searchText}
+        onChange={handleSearchChange}
+        className="search-bar"
+      />
+      <br />
       <AgeFilter onFilterChange={handleFilterChange} />
       <div style={{ height: "500px", width: "100%" }}>
         <AgGridReact
           ref={gridRef}
-          rowData={rowData}
+          rowData={filteredRowData}
           columnDefs={columnDefs}
           isExternalFilterPresent={() => isExternalFilterPresent(ageType)}
           doesExternalFilterPass={(node) => doesExternalFilterPass(ageType, node)}

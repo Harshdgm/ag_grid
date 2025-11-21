@@ -8,11 +8,11 @@ import CustomFilterTable from '../../components/CustomFilterTable/CustomFilterTa
 export default function index() {
   return (
     <>
-      <div style={{marginBottom:"30px"}}><AggregationTable /></div>
-      {/* <div style={{marginBottom:"30px"}}><AgGridPaginationImage /></div>
+      {/* <div style={{marginBottom:"30px"}}><AggregationTable /></div> */}
+      <div style={{marginBottom:"30px"}}><AgGridPaginationImage /></div>
       <div style={{marginBottom:"30px"}}><AgGridPagination /></div>
       <div style={{marginBottom:"30px"}}><TableFilter /></div>
-      <div style={{marginBottom:"30px"}}><CustomFilterTable /></div> */}
+      {/* <div style={{marginBottom:"30px"}}><CustomFilterTable /></div> */}
     </>
   )
 }

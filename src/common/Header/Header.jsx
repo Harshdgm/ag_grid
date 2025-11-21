@@ -9,6 +9,7 @@ export default function Header() {
         <Link to="/virtualization" className="link">Virtualization</Link>
         <Link to="/aggrid-pagination" className="link">AgGridFirst</Link>
         <Link to="/aggrid-table" className="link">AgGridSecond</Link>
+        <Link to="/aggregation" className="link">Aggregation</Link>
       </nav>
     </header>
   );

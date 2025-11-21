@@ -62,7 +62,7 @@ export default function AgGridPaginationImage() {
       tooltipValueGetter: firstRowTooltip,
     },
     { headerName: "Age", field: "Age", headerComponent: CustomHeader, sortable: true },
-    { headerName: "Year", field: "Year", headerComponent: CustomHeader, sortable: true },
+    { headerName: "Year", field: "Year", headerComponent: CustomHeader, sortable: true ,resizable: false},
     { headerName: "Date", field: "Date", headerComponent: CustomHeader, sortable: true },
     { headerName: "Sport", field: "Sport", headerComponent: CustomHeader, sortable: true },
     { headerName: "Gold", field: "Gold", headerComponent: CustomHeader, sortable: true },
@@ -94,6 +94,9 @@ export default function AgGridPaginationImage() {
             customHeader: CustomHeader,  
           }}
           suppressAggFilteredOnly={suppressAggFilteredOnly}
+          defaultColDef={{
+            resizable: true, 
+          }}
         />
       </div>
     </div>
