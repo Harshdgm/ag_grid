@@ -1,17 +1,26 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGamesData } from "../../api/api";
 import { AgGridReact } from "ag-grid-react";
-import { ModuleRegistry, ClientSideRowModelModule, PaginationModule } from "ag-grid-community";
+import {
+  ModuleRegistry,
+  ClientSideRowModelModule,
+  PaginationModule,
+  SelectEditorModule,
+} from "ag-grid-community";
 import CustomHeader from "../CustomHeader/CustomHeader";
-import TableSkeleton from "./TableSkeleton"; 
+import TableSkeleton from "./TableSkeleton";
 import Images from "../../assets/Images/index";
 import "./AgGridPaginationImage.css";
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, PaginationModule]);
+ModuleRegistry.registerModules([
+  ClientSideRowModelModule,
+  PaginationModule,
+  SelectEditorModule,
+]);
 
 const HelloCountryRenderer = ({ value }) => {
-  const imgSrc = Images[value]; 
+  const imgSrc = Images[value];
 
   return (
     <div className="image-container" title={value}>
@@ -28,12 +37,11 @@ const HelloCountryRenderer = ({ value }) => {
 const initialGroupOrderComparator = (params) =>
   params.nodeA.allLeafChildren.length - params.nodeB.allLeafChildren.length;
 
-
-const firstRowTooltip = ({value}) => {
+const firstRowTooltip = ({ value }) => (
   <div className="image-container" title={value}>
     <span>{value}</span>
   </div>
-};
+);
 
 export default function AgGridPaginationImage() {
   const { data, isLoading, error } = useQuery({
@@ -42,7 +50,15 @@ export default function AgGridPaginationImage() {
     refetchOnWindowFocus: false,
   });
 
-  const suppressAggFilteredOnly=true;  
+  const [rowData, setRowData] = useState([]);
+
+  useMemo(() => {
+    if (data) {
+      setRowData(data?.data?.Games || data?.data || []);
+    }
+  }, [data]);
+
+  const suppressAggFilteredOnly = true;
 
   const columnDefs = [
     {
@@ -50,9 +66,9 @@ export default function AgGridPaginationImage() {
       valueGetter: "node.rowIndex + 1",
       headerComponent: CustomHeader,
       sortable: true,
-      headerTooltip: "This is the row number"
+      headerTooltip: "This is the row number",
     },
-    { headerName: "Athlete", field: "Athlete", headerComponent: CustomHeader, sortable: true,},
+    { headerName: "Athlete", field: "Athlete", headerComponent: CustomHeader, sortable: true },
     {
       headerName: "Country",
       field: "Country",
@@ -62,9 +78,28 @@ export default function AgGridPaginationImage() {
       tooltipValueGetter: firstRowTooltip,
     },
     { headerName: "Age", field: "Age", headerComponent: CustomHeader, sortable: true },
-    { headerName: "Year", field: "Year", headerComponent: CustomHeader, sortable: true ,resizable: false},
+    { headerName: "Year", field: "Year", headerComponent: CustomHeader, sortable: true, resizable: false },
     { headerName: "Date", field: "Date", headerComponent: CustomHeader, sortable: true },
-    { headerName: "Sport", field: "Sport", headerComponent: CustomHeader, sortable: true },
+    {
+      headerName: "Sport",
+      field: "Sport",
+      headerComponent: CustomHeader,
+      sortable: true,
+      editable: true,
+      cellEditor: "agSelectCellEditor",
+      cellEditorParams: {
+        values: [
+          "Swimming",
+          "Speed Skating",
+          "Short-track Speed Skating",
+          "Cross Country Skiing",
+          "Gymnastics",
+          "Cycling",
+          "Diving",
+          "Biathlon",
+        ],
+      },
+    },
     { headerName: "Gold", field: "Gold", headerComponent: CustomHeader, sortable: true },
     { headerName: "Silver", field: "Silver", headerComponent: CustomHeader, sortable: true },
     { headerName: "Bronze", field: "Bronze", headerComponent: CustomHeader, sortable: true },
@@ -73,8 +108,6 @@ export default function AgGridPaginationImage() {
 
   if (isLoading) return <TableSkeleton rows={10} columns={columnDefs.length} />;
   if (error) return <div>Error data: {error.message}</div>;
-
-  const rowData = data?.data?.Games || data?.data || [];
 
   return (
     <div className="grid-container">
@@ -87,15 +120,20 @@ export default function AgGridPaginationImage() {
           paginationPageSize={20}
           rowHeight={40}
           headerHeight={40}
-          tooltipShowDelay={0} 
-          enableBrowserTooltips={false} 
+          tooltipShowDelay={0}
+          enableBrowserTooltips={false}
           initialGroupOrderComparator={initialGroupOrderComparator}
           components={{
-            customHeader: CustomHeader,  
+            customHeader: CustomHeader,
           }}
           suppressAggFilteredOnly={suppressAggFilteredOnly}
           defaultColDef={{
-            resizable: true, 
+            resizable: true,
+          }}
+          onCellValueChanged={(params) => {
+            const updatedData = [...rowData];
+            updatedData[params.rowIndex] = params.data;
+            setRowData(updatedData);
           }}
         />
       </div>

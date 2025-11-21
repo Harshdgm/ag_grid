@@ -6,7 +6,7 @@ export default function index() {
   return (
     <>
       {/* <div><AggregationTable /></div> */}
-      {/* <div><GamesTable /></div> */}
+      <div><GamesTable /></div>
     </>
   )
 }

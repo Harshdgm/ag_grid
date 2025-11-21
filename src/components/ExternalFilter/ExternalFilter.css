@@ -21,3 +21,14 @@
     border: 1px solid #ccc;
 }
 
+.totals-container{
+    margin: 10px 0;
+    font-weight: bold;
+    background-color: #f9f9f9;
+    padding: 5px 10px;
+    border-radius: 4;
+}
+
+
+
+
