@@ -79,6 +79,7 @@ export default function AgGridPaginationImage() {
   return (
     <div className="grid-container">
       <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
+        <h1>Pagination & Sorting & Image </h1>
         <AgGridReact
           rowData={rowData}
           columnDefs={columnDefs}

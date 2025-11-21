@@ -31,7 +31,7 @@ export default function TableFilter() {
   if (error) return <div>Error loading data</div>;
 
   return (
-    <div className="ag-theme-alpine" style={{ height: '500px', width: '100%', marginTop: '80px' }}>
+    <div className="ag-theme-alpine" style={{ height: '500px', width: '100%', marginTop: '120px' }}>
       <h1>Default Filter UI :</h1>
       <AgGridReact
         ref={gridRef}

@@ -35,7 +35,7 @@ export default function AgGrid() {
 
   return (
     <div className="diabetes-container">
-      <h1>AgGrid with Virtualization</h1>
+      <h1>AgGrid with Virtualization & without Pagination :</h1>
       <div
         className="ag-theme-alpine"
         style={{ height: 400, width: "100%" }} 

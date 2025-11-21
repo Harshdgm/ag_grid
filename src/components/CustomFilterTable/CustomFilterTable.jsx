@@ -46,7 +46,8 @@ export default function CustomFilterTable() {
   }, []);
 
   return (
-    <div className="ag-theme-alpine" style={{ height: "500px", width: "100%" }}>
+    <div className="ag-theme-alpine" style={{ height: "500px", width: "100%", marginTop:"100px" }}>
+      <h1>CustomFilter UI :</h1>
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}

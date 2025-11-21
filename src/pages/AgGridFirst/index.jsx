@@ -7,7 +7,6 @@ export default function index() {
     <div>
         <div><ExternalFilter /></div>
         <div>
-          <p>AgGrid without pagination process</p>
           <AgGrid />
         </div>
     </div>

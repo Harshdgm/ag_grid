@@ -51,6 +51,7 @@ export default function ExternalFilter() {
 
   return (
     <div className="test-container">
+      <h1>AG Grid with external filter</h1>
       <AgeFilter onFilterChange={handleFilterChange} />
       <div style={{ height: "500px", width: "100%" }}>
         <AgGridReact

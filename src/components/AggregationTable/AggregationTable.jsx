@@ -19,8 +19,8 @@ ModuleRegistry.registerModules([
 const AggregationTable = () => {
   const gridRef = useRef(null);
 
-  const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
-  const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
+  // const containerStyle = useMemo(() => ({ width: "100%", height: "100%" }), []);
+  // const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
   const [columnDefs] = useState([
     { field: "country", rowGroup: true, hide: true },
@@ -73,9 +73,10 @@ const AggregationTable = () => {
   );
 
   return (
-    <div style={containerStyle}>
+    <div style={{ width: "100%", height: "100%" }}>
       <div className="aggregation-wrapper">
-        <div style={gridStyle} className="ag-theme-alpine">
+        <div style={{ height: "500px", width: "100%" }} className="ag-theme-alpine">
+          <h1>Aggregation</h1>
           <AgGridReact
             ref={gridRef}
             rowData={data || []}
