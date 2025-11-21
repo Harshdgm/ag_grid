@@ -68,7 +68,9 @@ export default function GamesTable() {
   const getRowStyle = (params) => (params.data.isParent ? { backgroundColor: "#f9f9f9", fontWeight: "bold" } : { paddingLeft: "20px" });
 
   return (
+    
     <div className="ag-theme-quartz" style={{ height: 200, width: "100%" }}>
+      <h1>Nested Data : </h1>
       <AgGridReact
         rowData={flattenedRows}
         columnDefs={columnDefs}
