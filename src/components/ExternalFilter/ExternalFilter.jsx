@@ -62,8 +62,8 @@ export default function ExternalFilter() {
     { field: "bronze", filter: "agNumberColumnFilter" },
   ];
 
-  if (isLoading) return <div>Loading data...</div>;
-  if (isError) return <div>Error loading data</div>;
+  if (isLoading) return <div> Loading data... </div>;
+  if (isError) return <div> Error loading data </div>;
 
   return (
     <div className="test-container">
