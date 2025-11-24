@@ -1,72 +1,102 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 import "./AgNestedData.css";
 
 const SAMPLE = [
-  { id: 1, country: "USA", athlete: "Michael Phelps", year: 2008, total: 8 },
-  { id: 2, country: "USA", athlete: "Ryan Lochte", year: 2012, total: 6 },
-  { id: 3, country: "Russia", athlete: "Svetlana", year: 2004, total: 2 },
-  { id: 4, country: "Russia", athlete: "Anna", year: 2004, total: 3 },
-  { id: 5, country: "Canada", athlete: "Alex", year: 2010, total: 5 },
-  { id: 6, country: "Canada", athlete: "Chris", year: 2012, total: 2 },
+  { id: 1, country: "USA", athlete: "Michael Phelps", year: 2008, wins: 7, fails: 1 },
+  { id: 2, country: "USA", athlete: "Ryan Lochte", year: 2012, wins: 4, fails: 2 },
+  { id: 3, country: "Russia", athlete: "Svetlana", year: 2004, wins: 1, fails: 1 },
+  { id: 4, country: "Russia", athlete: "Anna", year: 2004, wins: 2, fails: 1 },
+  { id: 5, country: "Canada", athlete: "Alex", year: 2010, wins: 4, fails: 1 },
+  { id: 6, country: "Canada", athlete: "Chris", year: 2012, wins: 1, fails: 1 },
 ];
 
-export default function GroupedByCountryTable({ storageKey = "groupedTable_v1" }) {
+const calcLabel = (wins, fails) => {
+  if (wins > fails) return "Good Player";
+  if (fails > wins) return "Average Player";
+  return "Neutral";
+};
+
+export default function AgNestedData({ storageKey = "ag-nested-v4" }) {
   const [rows, setRows] = useState(() => {
-    const saved = localStorage.getItem(storageKey);
-    return saved ? JSON.parse(saved) : SAMPLE;
+    const saved = sessionStorage.getItem(storageKey);
+    if (saved) return JSON.parse(saved);
+
+    return SAMPLE.map((r) => ({
+      ...r,
+      wins: r.wins ?? 0,
+      fails: r.fails ?? 0,
+      total: (r.wins ?? 0) + (r.fails ?? 0),
+      label: calcLabel(r.wins ?? 0, r.fails ?? 0),
+    }));
   });
 
-  const [expandedMap, setExpandedMap] = useState(() => ({}));
-  const [aggFilter, setAggFilter] = useState("");
-  const [textFilter, setTextFilter] = useState("");
+  const [expandedMap, setExpandedMap] = useState({});
+  const [edit3Map, setEdit3Map] = useState({});
+  const [edit4Map, setEdit4Map] = useState({});
+  const [expanded4Map, setExpanded4Map] = useState({}); 
 
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(rows));
+    sessionStorage.setItem(storageKey, JSON.stringify(rows));
   }, [rows, storageKey]);
 
   const grouped = useMemo(() => {
-    const map = new Map();
-
+    const map = {};
     rows.forEach((r) => {
-      const key = r.country || "Unknown";
-      if (!map.has(key)) map.set(key, { country: key, items: [], total: 0 });
-      const group = map.get(key);
-      group.items.push(r);
-      group.total += Number(r.total) || 0;
+      if (!map[r.country]) map[r.country] = [];
+      map[r.country].push(r);
     });
 
-    const groups = Array.from(map.values())
-      .map((g) => {
-        const items = textFilter
-          ? g.items.filter(
-              (it) =>
-                (it.athlete || "").toString().toLowerCase().includes(textFilter.toLowerCase()) ||
-                (it.year || "").toString().includes(textFilter)
-            )
-          : g.items;
-        const total = items.reduce((s, it) => s + Number(it.total || 0), 0);
-        return { ...g, items, total };
-      })
-      .filter((g) => {
-        if (!aggFilter) return true;
-        return g.total.toString().includes(aggFilter);
-      });
-
-    return groups;
-  }, [rows, aggFilter, textFilter]);
+    return Object.entries(map).map(([country, items]) => ({
+      country,
+      items,
+      total: items.reduce((sum, r) => sum + r.total, 0),
+    }));
+  }, [rows]);
 
   const toggleGroup = (country) => {
-    setExpandedMap((prev) => ({ ...prev, [country]: !prev[country] }));
+    setExpandedMap((prev) => ({
+      ...prev,
+      [country]: !prev[country],
+    }));
   };
 
-  const editRow = (id) => {
-    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, _editing: true } : r)));
+  const toggleEdit3 = (id) => {
+    setEdit3Map((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
-  const cancelEdit = (id) => {
-    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, _editing: false } : r)));
+
+  const toggleEdit4 = (id) => {
+    setEdit4Map((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   };
-  const saveRow = (id, updated) => {
-    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, ...updated, _editing: false } : r)));
+
+  const toggleExpand4 = (id) => {
+    setExpanded4Map((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  const updateRow = (id, patch) => {
+    setRows((prev) =>
+      prev.map((r) =>
+        r.id === id
+          ? {
+              ...r,
+              ...patch,
+              wins: patch.wins ?? r.wins,
+              fails: patch.fails ?? r.fails,
+              total: (patch.wins ?? r.wins) + (patch.fails ?? r.fails),
+              label: calcLabel(patch.wins ?? r.wins, patch.fails ?? r.fails),
+            }
+          : r
+      )
+    );
   };
 
   const deleteRow = (id) => {
@@ -74,87 +104,29 @@ export default function GroupedByCountryTable({ storageKey = "groupedTable_v1" }
   };
 
   const addRow = () => {
-    const maxId = rows.reduce((m, r) => Math.max(m, r.id || 0), 0);
-    const newRow = { id: maxId + 1, country: "New", athlete: "New athlete", year: 2024, total: 0 };
-    setRows((prev) => [newRow, ...prev]);
+    const maxId = rows.reduce((m, r) => Math.max(m, r.id), 0);
+    setRows((prev) => [
+      {
+        id: maxId + 1,
+        country: "New Country",
+        athlete: "New Athlete",
+        year: 2024,
+        wins: 0,
+        fails: 0,
+        total: 0,
+        label: "Neutral",
+      },
+      ...prev,
+    ]);
   };
-
-  const GroupHeader = ({ group }) => {
-    const expanded = !!expandedMap[group.country];
-    return (
-      <div className="group-header">
-        <button className="chev" onClick={() => toggleGroup(group.country)} aria-label="toggle">
-          {expanded ? "▾" : "▸"}
-        </button>
-
-        <div className="group-title">
-          <div className="group-name">{group.country}</div>
-          <div className="group-meta">Total: <strong>{group.total}</strong></div>
-        </div>
-      </div>
-    );
-  };
-
-  
-  const RowEditor = ({ row }) => {
-    const [local, setLocal] = useState({ athlete: row.athlete, year: row.year, total: row.total });
-
-    return (
-      <div className="row-editor">
-        <input
-          className="small-input"
-          value={local.athlete}
-          onChange={(e) => setLocal((s) => ({ ...s, athlete: e.target.value }))}
-        />
-        <input
-          type="number"
-          className="small-input"
-          value={local.year}
-          onChange={(e) => setLocal((s) => ({ ...s, year: Number(e.target.value) }))}
-        />
-        <input
-          type="number"
-          className="small-input"
-          value={local.total}
-          onChange={(e) => setLocal((s) => ({ ...s, total: Number(e.target.value) }))}
-        />
-        <button className="btn save" onClick={() => saveRow(row.id, local)}>Save</button>
-        <button className="btn cancel" onClick={() => cancelEdit(row.id)}>Cancel</button>
-      </div>
-    );
-  };
-
-  const RowDisplay = ({ row }) => (
-    <div className="row-display">
-      <div className="cell">{row.athlete}</div>
-      <div className="cell">{row.year}</div>
-      <div className="cell">{row.total}</div>
-      <div className="cell actions">
-        <button className="btn" onClick={() => editRow(row.id)}>Edit</button>
-        <button className="btn danger" onClick={() => deleteRow(row.id)}>Delete</button>
-      </div>
-    </div>
-  );
 
   return (
     <div className="card">
       <div className="card-header">
-        <h3>Grouped by Country (free React implementation)</h3>
-        <div className="controls">
-          <input
-            placeholder="Filter groups by aggregated total (e.g. '12')"
-            value={aggFilter}
-            onChange={(e) => setAggFilter(e.target.value)}
-            className="filter-input"
-          />
-          <input
-            placeholder="Search athlete or year..."
-            value={textFilter}
-            onChange={(e) => setTextFilter(e.target.value)}
-            className="filter-input"
-          />
-          <button className="btn primary" onClick={addRow}>Add Row</button>
-        </div>
+        <h3>3-Level Nested Table + 4th Layer (Editable)</h3>
+        <button className="btn primary" onClick={addRow}>
+          Add Row
+        </button>
       </div>
 
       <div className="table">
@@ -162,25 +134,105 @@ export default function GroupedByCountryTable({ storageKey = "groupedTable_v1" }
           <div className="header-cell name">Athlete</div>
           <div className="header-cell">Year</div>
           <div className="header-cell">Total</div>
+          <div className="header-cell">Label</div>
+          <div className="header-cell">Wins</div>
+          <div className="header-cell">Fails</div>
           <div className="header-cell actions">Actions</div>
         </div>
 
         <div className="table-body">
           {grouped.map((g) => (
             <div key={g.country} className="group">
-              <GroupHeader group={g} />
+              <div className="group-header" onClick={() => toggleGroup(g.country)}>
+                <button className="chev">{expandedMap[g.country] ? <FiChevronDown /> : <FiChevronRight />}</button>
+                <div className="group-title">
+                  <div className="group-name">{g.country}</div>
+                  <div className="group-meta">
+                    Total: <strong>{g.total}</strong>
+                  </div>
+                </div>
+              </div>
 
-              {expandedMap[g.country] !== false ? (
-                g.items.length ? (
-                  g.items.map((row) => (
-                    <div key={row.id} className="table-row">
-                      {row._editing ? <RowEditor row={row} /> : <RowDisplay row={row} />}
+              {expandedMap[g.country] &&
+                g.items.map((row) => (
+                  <div key={row.id} className="nested-block">
+                    {/* 3rd Layer - Athlete Row */}
+                    
+                    <div className={`table-roww ${edit3Map[row.id] ? "editing" : ""}`}>
+                      
+                      <div className="row-display">
+                      <button className="chev" onClick={() => toggleExpand4(row.id)}>
+                            {expanded4Map[row.id] ? <FiChevronDown /> : <FiChevronRight />}
+                          </button>
+                        <input
+                          className="small-input borderless"
+                          value={row.athlete}
+                          disabled={!edit3Map[row.id]}
+                          onChange={(e) => updateRow(row.id, { athlete: e.target.value })}
+                        />
+                        <input
+                          type="number"
+                          className="small-input borderless"
+                          value={row.year}
+                          disabled={!edit3Map[row.id]} 
+                          onChange={(e) => updateRow(row.id, { year: Number(e.target.value) })}
+                        />
+                        <div className="cell">{row.total}</div>
+                        <div className="cell">{row.label}</div>
+                        <div className="cell"></div>
+                        <div className="cell"></div>
+                        <div className="cell actions">
+                          
+                          <button className="btn primary" onClick={() => toggleEdit3(row.id)}>
+                            {edit3Map[row.id] ? "Save" : "Edit"}
+                          </button>
+                          <button className="btn danger" onClick={() => deleteRow(row.id)}>
+                            Delete
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  ))
-                ) : (
-                  <div className="empty-group">No rows matching filters</div>
-                )
-              ) : null}
+
+                    {expanded4Map[row.id] && (
+                      <div className={`nested-row wins-fails ${edit4Map[row.id] ? "editing" : ""}`}>
+                        {edit4Map[row.id] ? (
+                          <>
+                           <div className="cell"></div>
+                        <div className="cell"></div>
+                            <div className="cell"></div>
+                        <div className="cell"></div>
+                            <input
+                              type="number"
+                              value={row.wins}
+                              className="small-input"
+                              onChange={(e) => updateRow(row.id, { wins: Number(e.target.value) })}
+                            />
+                            <input
+                              type="number"
+                              value={row.fails}
+                              className="small-input"
+                              onChange={(e) => updateRow(row.id, { fails: Number(e.target.value) })}
+                            />
+                          </>
+                        ) : (
+                          <>
+                           <div className="cell"></div>
+                        <div className="cell"></div>
+                            <div className="cell"></div>
+                        <div className="cell"></div>
+                            <div className="cell">{row.wins}</div>
+                            <div className="cell">{row.fails}</div>
+                          </>
+                        )}
+                        <div className="cell actions">
+                          <button className="btn primary" onClick={() => toggleEdit4(row.id)}>
+                            {edit4Map[row.id] ? "Save" : "Edit"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
             </div>
           ))}
         </div>
