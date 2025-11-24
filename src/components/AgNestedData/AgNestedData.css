@@ -69,19 +69,18 @@
 .table-head {
   display: flex;
   background: #f9f9f9;
-  padding: 8px 12px 8px 30px;
+  padding: 8px 12px 8px 20px;
   font-weight: 600;
   align-items: center;
 }
 
 .header-cell {
   flex: 1;
-  padding: 4px 20px;
+  padding: 4px 25px;
   text-align: left;
 }
 
 .group {
-  margin-bottom: 12px;
   padding-bottom: 8px;
   border-bottom: 1px solid #eee;
 }
@@ -93,7 +92,23 @@
   padding: 8px 4px;
   cursor: pointer;
 }
+.group-header .row-display.group-header-row {
+  display: flex;
+  align-items: center;
+  gap: 32px; 
+}
 
+.group-header .row-display.group-header-row .cell {
+  flex: 1;             /* all columns take equal space */
+  min-width: 130px;     /* ensures even spacing even if empty */
+  padding: 4px 8px;
+  box-sizing: border-box;
+}
+
+
+.group-header .cell.total {
+  color: #333;
+}
 .chev {
   font-size: 16px;
   border: 0;
@@ -226,3 +241,22 @@
   display: flex;
   gap: 4px;
 }
+
+.footer-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;         
+  font-weight: 600;
+  border: 1px solid #ddd;
+  padding: 6px 40px;
+  background: #f0f0f0;
+  
+}
+
+.footer-row .cell {
+          /* all columns take equal space */
+  min-width: 130px;    /* keeps spacing consistent even if empty */
+  padding: 4px 8px;
+
+}
+

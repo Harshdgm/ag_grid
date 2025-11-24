@@ -47,12 +47,24 @@ export default function AgNestedData({ storageKey = "ag-nested-v4" }) {
       map[r.country].push(r);
     });
 
-    return Object.entries(map).map(([country, items]) => ({
-      country,
-      items,
-      total: items.reduce((sum, r) => sum + r.total, 0),
-    }));
-  }, [rows]);
+    return Object.entries(map).map(([country, items]) => {
+        const years = items.map((r) => r.year);
+        const allSameYear = years.every((y) => y === years[0]);
+        const commonYear = allSameYear ? years[0] : "";
+
+        const labels = items.map((r) => r.label);
+        const allSameLabel = labels.every((l) => l === labels[0]);
+        const commonLabel = allSameLabel ? labels[0] : "";
+
+        return {
+          country,
+          items,
+          total: items.reduce((sum, r) => sum + r.total, 0),
+          commonYear,   
+          commonLabel,   
+        };
+      });
+    }, [rows]);
 
   const toggleGroup = (country) => {
     setExpandedMap((prev) => ({
@@ -103,30 +115,32 @@ export default function AgNestedData({ storageKey = "ag-nested-v4" }) {
     setRows((prev) => prev.filter((r) => r.id !== id));
   };
 
-  const addRow = () => {
-    const maxId = rows.reduce((m, r) => Math.max(m, r.id), 0);
-    setRows((prev) => [
-      {
-        id: maxId + 1,
-        country: "New Country",
-        athlete: "New Athlete",
-        year: 2024,
-        wins: 0,
-        fails: 0,
-        total: 0,
-        label: "Neutral",
-      },
-      ...prev,
-    ]);
+  const footer = useMemo(() => {
+  if (!grouped.length) return {};
+
+  const years = grouped.map((g) => g.commonYear).filter((y) => y !== "");
+  const allSameYear = years.length === grouped.length && years.every((y) => y === years[0]);
+  const footerYear = allSameYear ? years[0] : "";
+
+  const labels = grouped.map((g) => g.commonLabel).filter((l) => l !== "");
+  const allSameLabel = labels.length === grouped.length && labels.every((l) => l === labels[0]);
+  const footerLabel = allSameLabel ? labels[0] : "";
+
+  const totals = grouped.map((g) => g.total);
+  const allSameTotal = totals.every((t) => t === totals[0]);
+  const footerTotal = allSameTotal ? totals[0] : "";
+
+  return {
+    footerYear,
+    footerLabel,
+    footerTotal,
   };
+}, [grouped]);
 
   return (
     <div className="card">
       <div className="card-header">
-        <h3>3-Level Nested Table + 4th Layer (Editable)</h3>
-        <button className="btn primary" onClick={addRow}>
-          Add Row
-        </button>
+        <h3>Nested Table</h3>
       </div>
 
       <div className="table">
@@ -143,23 +157,25 @@ export default function AgNestedData({ storageKey = "ag-nested-v4" }) {
         <div className="table-body">
           {grouped.map((g) => (
             <div key={g.country} className="group">
-              <div className="group-header" onClick={() => toggleGroup(g.country)}>
-                <button className="chev">{expandedMap[g.country] ? <FiChevronDown /> : <FiChevronRight />}</button>
-                <div className="group-title">
-                  <div className="group-name">{g.country}</div>
-                  <div className="group-meta">
-                    Total: <strong>{g.total}</strong>
-                  </div>
-                </div>
-              </div>
+              <div className="group-header">
+                <button className="chev" onClick={() => toggleGroup(g.country)}>
+                  {expandedMap[g.country] ? <FiChevronDown /> : <FiChevronRight />}
+                </button>
 
+                <div className="row-display group-header-row">
+                  <div className="cell country-name">{g.country}</div>
+                  <div className="cell">{g.commonYear}</div>
+                  <div className="cell">{g.total}</div>  
+                  <div className="cell">{g.commonLabel}</div>
+                  <div className="cell">{g.wins}</div>
+                  <div className="cell">{g.fails}</div>
+                  <div className="cell actions">{g.actions}</div>
+                </div>
+             </div>
               {expandedMap[g.country] &&
                 g.items.map((row) => (
                   <div key={row.id} className="nested-block">
-                    {/* 3rd Layer - Athlete Row */}
-                    
-                    <div className={`table-roww ${edit3Map[row.id] ? "editing" : ""}`}>
-                      
+                    <div className={`table-roww ${edit3Map[row.id] ? "editing" : ""}`}> 
                       <div className="row-display">
                       <button className="chev" onClick={() => toggleExpand4(row.id)}>
                             {expanded4Map[row.id] ? <FiChevronDown /> : <FiChevronRight />}
@@ -182,7 +198,6 @@ export default function AgNestedData({ storageKey = "ag-nested-v4" }) {
                         <div className="cell"></div>
                         <div className="cell"></div>
                         <div className="cell actions">
-                          
                           <button className="btn primary" onClick={() => toggleEdit3(row.id)}>
                             {edit3Map[row.id] ? "Save" : "Edit"}
                           </button>
@@ -233,8 +248,20 @@ export default function AgNestedData({ storageKey = "ag-nested-v4" }) {
                     )}
                   </div>
                 ))}
+
             </div>
+
+            
           ))}
+          <div className="footer-row row-display">
+            <div className="cell country-name">Footer</div>
+            <div className="cell">{footer.footerYear}</div>
+            <div className="cell">{footer.footerTotal}</div>
+            <div className="cell">{footer.footerLabel}</div>
+            <div className="cell"></div>
+            <div className="cell"></div>
+            <div className="cell actions"></div>
+        </div>
         </div>
       </div>
     </div>
