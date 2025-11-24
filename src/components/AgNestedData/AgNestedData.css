@@ -1,0 +1,161 @@
+.card {
+  max-width: 1200px;
+  margin: 24px auto;
+  background:#fff;
+  padding:16px;
+}
+
+.card-header {
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    gap:12px; 
+    margin-bottom:12px;
+}
+
+.controls { 
+    display:flex; 
+    gap:8px; 
+    align-items:center; 
+}
+
+.filter-input { 
+    padding:8px 10px; 
+    border-radius:8px; 
+    border:1px solid #ddd; 
+}
+
+.btn { 
+    padding:6px 10px; 
+    border-radius:8px; 
+    border:none; 
+    background:#eee; 
+    cursor:pointer; 
+}
+
+.btn.primary { 
+    background:blue; 
+    color:#fff; 
+}
+
+.btn.save { 
+    background: green; 
+    color: #fff; 
+    margin-left:8px; 
+}
+
+.btn.cancel { 
+    background: red; 
+    color: #fff; 
+    margin-left:8px; 
+}
+
+.btn.danger { 
+    background: red; 
+    color:#fff; 
+}
+
+.table { 
+    border-top:1px solid #f9f9f9; 
+    border-left:1px solid #f9f9f9; 
+    border-right:1px solid #f9f9f9; 
+    border-radius:8px; 
+    overflow:hidden; 
+}
+
+.table-head { 
+    display:flex; 
+    background:#f9f9f9;
+    padding:8px 12px; 
+    font-weight:600; 
+    align-items:center; 
+}
+
+.header-cell { 
+    flex:1; 
+    padding:4px 8px; 
+}
+
+.table-body { 
+    padding:8px; 
+}
+
+.group { 
+    margin-bottom:8px; 
+    border-bottom:1px dashed #f9f9f9; 
+    padding-bottom:8px; 
+}
+
+.group-header { 
+    display:flex; 
+    gap:12px; 
+    align-items:center; 
+    padding:8px 4px; 
+    cursor:pointer; 
+}
+
+.chev { 
+    font-size:16px; 
+    border:0; 
+    background:transparent; 
+    cursor:pointer; 
+}
+
+.group-title { 
+    display:flex; 
+    gap:12px; 
+    align-items:center; 
+}
+
+.group-name { 
+    font-weight:700; 
+}
+
+.group-meta { 
+    color:gray; 
+    font-size:13px; 
+}
+
+.table-row { 
+    display:block; 
+    padding:6px 0; 
+    border-radius:6px; 
+}
+
+.row-display { 
+    display:flex; 
+    gap:12px; 
+    align-items:center; 
+    padding:6px 12px; 
+}
+
+.cell { 
+    flex:1; 
+    padding:4px 8px; 
+}
+
+.row-editor { 
+    display:flex; 
+    gap:8px; 
+    align-items:center; 
+    padding:6px 12px; 
+}
+
+.small-input { 
+    padding:6px 8px; 
+    width:140px; 
+    border-radius:6px; 
+    border:1px solid #f9f9f9;
+}
+
+.empty-group { 
+    padding:8px 12px; 
+    color:#f9f9f9;
+    font-style:italic; 
+}
+
+.actions { 
+    display:flex;
+    gap:8px; 
+    justify-content:flex-end; 
+}
