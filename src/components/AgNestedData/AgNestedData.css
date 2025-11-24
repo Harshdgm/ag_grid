@@ -1,67 +1,34 @@
 .card {
   max-width: 1200px;
   margin: 24px auto;
-  background: #fff;
-  padding: 16px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.controls {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.filter-input {
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
 }
 
 .btn {
   padding: 6px 10px;
   border-radius: 8px;
   border: none;
-  background: #eee;
   cursor: pointer;
+  color:#fff;
 }
+
 .cell.actions{
     display: flex;
     align-items:center;
     gap:4px;
 }
 
-.btn.primary {
-  background: blue;
-  color: #fff;
+.btn.primary { 
+    background: blue;
+ }
+.btn.save { 
+    background: green; 
 }
-
-
-.btn.save {
-  background: green;
-  color: #fff;
-}
-
-.btn.cancel {
-  background: red;
-  color: #fff;
-}
-
-.btn.danger {
-  background: red;
-  color: #fff;
+.btn.danger {  
+    background: red; 
 }
 
 .table {
-  border-top: 1px solid #f9f9f9;
-  border-left: 1px solid #f9f9f9;
-  border-right: 1px solid #f9f9f9;
+  border: 1px solid #f9f9f9;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -71,7 +38,6 @@
   background: #f9f9f9;
   padding: 8px 12px 8px 20px;
   font-weight: 600;
-  align-items: center;
 }
 
 .header-cell {
@@ -98,37 +64,17 @@
   gap: 32px; 
 }
 
-.group-header .row-display.group-header-row .cell {
-  flex: 1;             /* all columns take equal space */
-  min-width: 130px;     /* ensures even spacing even if empty */
+.group-header .row-display.group-header-row .cell {           
+  min-width: 130px;    
   padding: 4px 8px;
   box-sizing: border-box;
 }
 
-
-.group-header .cell.total {
-  color: #333;
-}
 .chev {
   font-size: 16px;
   border: 0;
   background: transparent;
   cursor: pointer;
-}
-
-.group-title {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.group-name {
-  font-weight: 700;
-}
-
-.group-meta {
-  color: gray;
-  font-size: 13px;
 }
 
 .table-roww {
@@ -151,22 +97,9 @@
   background: white;
 }
 
-.table-row.editing .row-display input {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: #fff;
-}
-
 .cell {
   flex: 1;
   padding: 4px;
-}
-
-.row-editor {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  padding: 6px 12px;
 }
 
 .small-input {
@@ -189,15 +122,6 @@
   padding: 8px;
   border-radius: 6px;
   margin-top: 4px;
-}
-
-.nf-title {
-  font-weight: 700;
-  width: 140px;
-}
-
-.nf-label {
-  flex: 1;
 }
 
 .wins-fails .cell.actions {
@@ -254,9 +178,7 @@
 }
 
 .footer-row .cell {
-          /* all columns take equal space */
-  min-width: 130px;    /* keeps spacing consistent even if empty */
+  min-width: 130px;    
   padding: 4px 8px;
-
 }
 
