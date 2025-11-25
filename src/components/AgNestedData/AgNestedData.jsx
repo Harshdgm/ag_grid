@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 import { NestedData } from "../../data/NestedData.js";
 import { calcLabel } from "../../utils/player.js";
 import {groupRows} from "../../utils/groupRows.js";
@@ -8,6 +9,11 @@ import useGlobalFilter from "../../hooks/useGlobalFilter";
 import GroupRow from "./GroupRaw.jsx";
 import FooterRow from "./FooterRaw.jsx";
 import "./AgNestedData.css";
+
+function getSortArrow(columnKey, sortConfig) {
+  if (sortConfig.key !== columnKey) return null;
+  return sortConfig.direction === "asc" ? <FiChevronUp /> : <FiChevronDown />;
+}
 
 export default function AgNestedData({ storageKey = "ag-nested-v4" }) {
   const { input, setInput, filter: globalFilter } = useGlobalFilter();
@@ -90,19 +96,19 @@ export default function AgNestedData({ storageKey = "ag-nested-v4" }) {
       <div className="table">
         <div className="table-head">
          <div className="header-cell name" onClick={() => handleSort("athlete")}>
-            Athlete {sortConfig.key === "athlete" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+            Athlete {getSortArrow("athlete", sortConfig)}
           </div>
 
           <div className="header-cell" onClick={() => handleSort("year")}>
-            Year {sortConfig.key === "year" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+            Year {getSortArrow("year", sortConfig)}
           </div>
 
           <div className="header-cell" onClick={() => handleSort("total")}>
-            Total {sortConfig.key === "total" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+            Total {getSortArrow("total", sortConfig)}
           </div>
 
           <div className="header-cell" onClick={() => handleSort("label")}>
-            Label {sortConfig.key === "label" && (sortConfig.direction === "asc" ? "▲" : "▼")}
+            Label {getSortArrow("label", sortConfig)}
           </div>
 
           <div className="header-cell">Wins</div>
