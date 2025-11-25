@@ -17,7 +17,7 @@ export function groupRows(rows, search, sortConfig) {
     map[r.country].push(r);
   });
 
-  return Object.entries(map).map(([country, items]) => {
+  let groups =  Object.entries(map).map(([country, items]) => {
     const sortedItems = sortItems(items, sortConfig);
 
     const years = sortedItems.map(r => r.year);
@@ -31,4 +31,10 @@ export function groupRows(rows, search, sortConfig) {
       commonLabel: labels.every(l => l === labels[0]) ? labels[0] : "",
     };
   });
+
+  if (sortConfig.key === "total" || sortConfig.key === "country") {
+    groups = sortItems(groups, sortConfig);
+  }
+
+  return groups;
 }
